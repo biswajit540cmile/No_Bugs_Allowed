@@ -22,7 +22,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
     return Scaffold(
       body: Consumer<TransactionScreenController>(
           builder: (context, contactsModel, child) {
+
         final transactionList = contactsModel.transactionList;
+       // print("${contactsModel.transactionList[2].amount}");
         return ListView.builder(
           itemCount: transactionList.length,
           itemBuilder: (context, index) {
