@@ -13,46 +13,27 @@ import '../model/transaction_list_response.dart';
 class TransactionScreenController extends ChangeNotifier {
   TransactionListResponse? defaultGroupResponse;
   List<Transaction> transactionList = [];
-
-  // Future<void> getUserTransactionList() async {
-  //   const url = ApiConstants.userTransactions; // Replace with your API endpoint
-  //   try {
-  //     final response = await http.get(Uri.parse(url));
-  //     if (response.statusCode == NumberConstant.intTwoHundred) {
-  //       await readJson().then((value) {
-  //         defaultGroupResponse =
-  //             TransactionListResponse.fromJson(jsonDecode(value.toString()));
-  //         transactionList = defaultGroupResponse?.data ?? [];
-  //         notifyListeners();
-  //       });
-  //     } else {
-  //       ///Error Response
-  //     }
-  //   } catch (error) {
-  //     print(error);
-  //   }
-  // }
+   late dynamic jsonData =[];
 
    Future<void> getUserTransactionList() async {
-   final url = 'https://your-api-url.com/transactions'; // Replace with your API URL
+   const url = ApiConstants.userTransactions; // Replace with your API URL
 
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         await readJson().then((value) {
-        final jsonData = json.decode(value);
-        if (jsonData['data'] != null) {
-          final transactions = jsonData['data'] as List<dynamic>;
-          // var data1 = transactions.map((transaction) {
-          //   return TransactionListResponseBuilder()..data..build();
-          // }).toList();
-         // print(transactions);
-          var data1 = transactions.map((transaction) {
-             return TransactionBuilder()..id;
-          }).toList();
-        print(data1[1].id);
-          }
-          });
+         jsonData = json.decode(value);//convert json to object
+          //print(int.parse(jsonData["data"].forEach(v){}));
+          // final v1 = (jsonData["data"] );
+          //  defaultGroupResponse = TransactionListResponse.build((responseBuilder) => responseBuilder
+          //     .withStatus(jsonData['status'])
+          //     .withStatusCode(jsonData['statusCode'])
+          //     .withMessage(jsonData['message'])
+          //     .withData(transactionList));
+         //  print(jsonData["data"][1]);
+         // transactionList["data"][index]["id"]
+        });
+
         notifyListeners();
       } else {
         throw Exception('Request failed with status: ${response.statusCode}');

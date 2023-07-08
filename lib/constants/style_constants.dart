@@ -52,4 +52,5 @@ class AppStyle {
       fontFamily: StringConstant.fontPoppins,
     );
   }
+
 }

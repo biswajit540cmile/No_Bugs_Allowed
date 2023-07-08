@@ -6,6 +6,7 @@ import '../../constants/number_constants.dart';
 import '../../constants/string_constants.dart';
 import '../../constants/style_constants.dart';
 import '../controller/transaction_screen_controller.dart';
+import '../model/transaction_list_response.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -17,17 +18,31 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<TransactionScreenController>();
+    var list =[];
+    final controller = context.read<TransactionScreenController>();
     controller.getUserTransactionList();
     return Scaffold(
       body: Consumer<TransactionScreenController>(
           builder: (context, contactsModel, child) {
-
-        final transactionList = contactsModel.transactionList;
+        var transactionList = contactsModel.jsonData;
        // print("${contactsModel.transactionList[2].amount}");
         return ListView.builder(
-          itemCount: transactionList.length,
+          itemCount: 1,
           itemBuilder: (context, index) {
+            var transactionListResponse = TransactionListResponse.build((responseBuilder) => responseBuilder
+                .withStatus("okk")
+                .withStatusCode(200)
+                .withMessage('Transactions retrieved successfully')
+                .withData([
+              Transaction.build((transactionBuilder) => transactionBuilder
+                  .withTransactionId(transactionList["data"][index]["transactionId"])
+                  .withId(transactionList["data"][index]["id"])
+                  .withAmount(transactionList["data"][index]["amount"])
+                  .withNote(transactionList["data"][index]["note"])
+                  .withCreationDateTime('2023-07-09')
+                  .withMode(transactionList["data"][index]["mode"]))
+            ]));
+
             return Container(
               margin: const EdgeInsets.only(top: NumberConstant.doubleFour),
               decoration: const BoxDecoration(
@@ -46,7 +61,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         Text(StringConstant.textDate,
                             style: AppStyle.listTitleTextStyle()),
                         Text(
-                          "${transactionList[index].creationDateTime}",
+                          "${transactionListResponse.data?[index]?.creationDateTime ?? ""}",
                           style: AppStyle.listDataTextStyle(),
                         ),
                       ],
@@ -63,7 +78,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           children: [
                             const Icon(Icons.currency_rupee_outlined,
                                 size: NumberConstant.doubleFourteen),
-                            Text("${transactionList[index].amount}",
+                            Text("${transactionListResponse.data?[index]?.amount ?? ""}",
                                 style: AppStyle.listDataTextStyle()),
                           ],
                         ),
@@ -81,7 +96,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           children: [
                             const Icon(Icons.currency_rupee_outlined,
                                 size: NumberConstant.doubleFourteen),
-                            Text("${transactionList[index].amount}",
+                            Text("${transactionListResponse.data?[index]?.amount ?? ""}",
                                 style: AppStyle.listDataTextStyle()),
                           ],
                         ),
@@ -99,7 +114,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         Padding(
                           padding: const EdgeInsets.only(
                               top: NumberConstant.doubleEight),
-                          child: Text("${transactionList[index].note}",
+                          child: Text("${transactionListResponse.data?[index]?.note ?? ""}",
                               style: AppStyle.listDataTextStyle()),
                         )
                       ],
