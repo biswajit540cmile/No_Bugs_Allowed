@@ -13,27 +13,32 @@ import '../model/transaction_list_response.dart';
 class TransactionScreenController extends ChangeNotifier {
   TransactionListResponse? defaultGroupResponse;
   List<Transaction> transactionList = [];
-   late dynamic jsonData =[];
-
    Future<void> getUserTransactionList() async {
    const url = ApiConstants.userTransactions; // Replace with your API URL
-
     try {
+      transactionList =[];
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         await readJson().then((value) {
-         jsonData = json.decode(value);//convert json to object
-          //print(int.parse(jsonData["data"].forEach(v){}));
-          // final v1 = (jsonData["data"] );
-          //  defaultGroupResponse = TransactionListResponse.build((responseBuilder) => responseBuilder
-          //     .withStatus(jsonData['status'])
-          //     .withStatusCode(jsonData['statusCode'])
-          //     .withMessage(jsonData['message'])
-          //     .withData(transactionList));
-         //  print(jsonData["data"][1]);
-         // transactionList["data"][index]["id"]
+        var jsonData = json.decode(value);//convert json to object
+        ///Using Builder Design Pattern to create Object of transactionListResponse
+          for(var i=0;i<jsonData["data"].length;i++){
+            var transactionListResponse = TransactionListResponse.build((responseBuilder) => responseBuilder
+                .withStatus("okk")
+                .withStatusCode(200)
+                .withMessage('Transactions retrieved successfully')
+                .withData([
+              Transaction.build((transactionBuilder) => transactionBuilder
+                  .withTransactionId(jsonData["data"][i]["transactionId"])
+                  .withId(jsonData["data"][i]["id"])
+                  .withAmount(jsonData["data"][i]["amount"])
+                  .withNote(jsonData["data"][i]["note"])
+                  .withCreationDateTime(jsonData["data"][i]["creationDateTime"])
+                  .withMode(jsonData["data"][i]["mode"]))
+            ]));
+            transactionList.addAll(transactionListResponse.data as Iterable<Transaction>);
+          }
         });
-
         notifyListeners();
       } else {
         throw Exception('Request failed with status: ${response.statusCode}');

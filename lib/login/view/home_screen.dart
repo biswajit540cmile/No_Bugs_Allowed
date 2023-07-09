@@ -17,14 +17,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: StringConstant.boolFalse,
-        title: const Text(StringConstant.textLogin),
+        title: const Center(child: Text("click on Floating Action button")),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
         elevation: 0,
         onPressed: () {
           Navigator.push(context,MaterialPageRoute(builder: (context) => const TransactionScreen(),));
         },
+        child: const Icon(Icons.add),
       ),
     );
   }
